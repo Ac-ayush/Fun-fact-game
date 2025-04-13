@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { City, User, ChallengeLink } from '../types';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'https://fun-fact-game.onrender.com/api';
 
 export const api = {
   getRandomCity: async (): Promise<City> => {

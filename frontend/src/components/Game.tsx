@@ -41,6 +41,7 @@ const Game: React.FC = () => {
         saveScore();
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, gameState.score]);
 
   const saveScore = async () => {

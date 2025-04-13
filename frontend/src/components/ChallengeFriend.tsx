@@ -1,22 +1,23 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { api } from '../services/api';
-import { City, GameState } from '../types';
-import ClueDisplay from './ClueDisplay';
-import AnswerOptions from './AnswerOptions';
-import ScoreDisplay from './ScoreDisplay';
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { api } from "../services/api";
+import { City, GameState } from "../types";
+import ClueDisplay from "./ClueDisplay";
+import AnswerOptions from "./AnswerOptions";
+import ScoreDisplay from "./ScoreDisplay";
 
 const ChallengeFriend: React.FC = () => {
   const searchParams = useSearchParams();
-  const challengeId = searchParams.get('challengeId');
-  const challengerUsername = searchParams.get('challengerUsername');
-  const currentUser = searchParams.get('username');
-  const [challengerInfo, setChallengerInfo] = useState<{ username: string; score: number } | null>(null);
+  const challengerUsername = searchParams.get("challengerUsername");
+  const currentUser = searchParams.get("username");
+  const [challengerInfo, setChallengerInfo] = useState<{
+    username: string;
+    score: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showSharePopup, setShowSharePopup] = useState(!challengeId);
   const [gameState, setGameState] = useState<GameState>({
     currentCity: null,
     selectedAnswer: null,
@@ -24,7 +25,7 @@ const ChallengeFriend: React.FC = () => {
     isCorrect: false,
     score: 0,
     correctAnswers: 0,
-    incorrectAnswers: 0
+    incorrectAnswers: 0,
   });
   const [cities, setCities] = useState<City[]>([]);
   const [answerOptions, setAnswerOptions] = useState<City[]>([]);
@@ -37,8 +38,8 @@ const ChallengeFriend: React.FC = () => {
           setChallengerInfo({ username: challengerUsername, score });
         }
       } catch (err) {
-        setError('Failed to load challenge information');
-        console.error('Error fetching challenge info:', err);
+        setError("Failed to load challenge information");
+        console.error("Error fetching challenge info:", err);
       } finally {
         setLoading(false);
       }
@@ -49,11 +50,11 @@ const ChallengeFriend: React.FC = () => {
         const citiesData = await api.getCities();
         setCities(citiesData);
         const randomCity = await api.getRandomCity();
-        setGameState(prev => ({ ...prev, currentCity: randomCity }));
+        setGameState((prev) => ({ ...prev, currentCity: randomCity }));
         generateAnswerOptions(citiesData, randomCity);
       } catch (err) {
-        setError('Failed to load game data');
-        console.error('Error fetching cities:', err);
+        setError("Failed to load game data");
+        console.error("Error fetching cities:", err);
       }
     };
 
@@ -66,10 +67,14 @@ const ChallengeFriend: React.FC = () => {
   }, [challengerUsername]);
 
   const generateAnswerOptions = (allCities: City[], correctCity: City) => {
-    const otherCities = allCities.filter(city => city.name !== correctCity.name);
+    const otherCities = allCities.filter(
+      (city) => city.name !== correctCity.name
+    );
     const shuffled = [...otherCities].sort(() => 0.5 - Math.random());
     const randomCities = shuffled.slice(0, 3);
-    const options = [...randomCities, correctCity].sort(() => 0.5 - Math.random());
+    const options = [...randomCities, correctCity].sort(
+      () => 0.5 - Math.random()
+    );
     setAnswerOptions(options);
   };
 
@@ -79,43 +84,49 @@ const ChallengeFriend: React.FC = () => {
     const isCorrect = selectedCity === gameState.currentCity?.name;
     const newScore = isCorrect ? gameState.score + 10 : gameState.score - 5;
 
-    setGameState(prev => ({
+    setGameState((prev) => ({
       ...prev,
       selectedAnswer: selectedCity,
       isAnswered: true,
       isCorrect,
       score: newScore,
       correctAnswers: isCorrect ? prev.correctAnswers + 1 : prev.correctAnswers,
-      incorrectAnswers: !isCorrect ? prev.incorrectAnswers + 1 : prev.incorrectAnswers
+      incorrectAnswers: !isCorrect
+        ? prev.incorrectAnswers + 1
+        : prev.incorrectAnswers,
     }));
   };
 
   const handleNextQuestion = async () => {
     try {
       const randomCity = await api.getRandomCity();
-      setGameState(prev => ({
+      setGameState((prev) => ({
         ...prev,
         currentCity: randomCity,
         selectedAnswer: null,
         isAnswered: false,
-        isCorrect: false
+        isCorrect: false,
       }));
       generateAnswerOptions(cities, randomCity);
     } catch (error) {
-      console.error('Error fetching next city:', error);
+      console.error("Error fetching next city:", error);
     }
   };
 
   const handleShare = () => {
     const shareUrl = `${window.location.origin}/challenge?challengerUsername=${currentUser}`;
-    
+
     // For WhatsApp sharing
     const whatsappUrl = `https://wa.me/?text=Challenge me to Globe Trotter! ${shareUrl}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, "_blank");
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
@@ -153,7 +164,11 @@ const ChallengeFriend: React.FC = () => {
   }
 
   if (!gameState.currentCity) {
-    return <div className="flex items-center justify-center min-h-screen">Loading game...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading game...
+      </div>
+    );
   }
 
   return (
@@ -161,7 +176,9 @@ const ChallengeFriend: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         {challengerInfo && (
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h2 className="text-xl font-bold mb-2">Challenge from {challengerInfo.username}</h2>
+            <h2 className="text-xl font-bold mb-2">
+              Challenge from {challengerInfo.username}
+            </h2>
             <p className="text-gray-600">Their Score: {challengerInfo.score}</p>
             {/* <button
               onClick={() => setShowSharePopup(true)}
