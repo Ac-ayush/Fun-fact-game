@@ -1,6 +1,5 @@
 #### Preview
 
-<img width="1792" alt="Screenshot 2024-12-21 at 8 02 51 PM" src="https://github.com/user-attachments/assets/41895cda-7e49-4e49-b572-bd9d621b1a6b" />
 
 ### This is a full-stack web application with:
 - Frontend: Next.js + TypeScript + Tailwind CSS
