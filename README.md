@@ -23,5 +23,5 @@
    `npm run dev`
 
 
-#### Connect to me
+#### Connect with me
 - [LinkedIn](https://www.linkedin.com/in/chouhan-ayush/)
