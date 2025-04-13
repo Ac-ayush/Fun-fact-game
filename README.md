@@ -4,7 +4,7 @@
 
 ### Steps to setup this project in your machine
 
-- STEP1 : clone the repo
+- STEP1 : clone the repo `https://github.com/Ac-ayush/Fun-fact-game.git`
 
 - STEP2 : Start backend 
    - go to the backend
